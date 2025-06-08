@@ -1,0 +1,8 @@
+[build]
+  publish = "."
+  command = ""
+
+[[redirects]]
+  from = "/*"
+  to = "/profit_calculator - 2 (3).html"
+  status = 200
