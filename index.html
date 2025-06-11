@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#409EFF">
   <title>Calculadora de Lucro - Sistema de Plataformas</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <script>
@@ -186,7 +186,7 @@
         gap: 1rem;
       }
       
-      .flex.w-1/2 {
+      .flex.w-1\/2 {
         width: 100%;
       }
       
@@ -195,7 +195,7 @@
       }
       
       /* 在移动端每个输入框独占一行 */
-      .flex > div.flex.items-center.w-1/2 {
+      .flex > div.flex.items-center.w-1\/2 {
         width: 100%;
         margin-bottom: 0.5rem;
       }
@@ -260,6 +260,15 @@
             <span class="ml-auto bg-purple-100 text-black-600 text-xs px-2 py-1 rounded-full">SH</span>
           </a>
         </li>
+        
+        <!-- TIKTOK -->
+          <li>
+            <a href="#" onclick="selectPlatform('tiktok')" id="nav-tiktok" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+              <i class="fa-brands fa-tiktok mr-3 text-lg text-black"></i>
+              <span>TIKTOK</span>
+              <span class="ml-auto bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">TK</span>
+            </a>
+          </li>
         
         <!-- SHOPEE -->
         <li>
@@ -492,14 +501,22 @@
         info: 'Mercado Livre: Taxa normal 11,5% ou Premium 16,5%. Frete grátis para pedidos abaixo de R$ 79.'
       },
       'shein': {
-        name: 'SHEIN',
-        invoiceRate: 8,
-        platformFeeRate: 16,
-        shippingFee: 0,
-        itemFee: 5,
-        info: 'SHEIN: Taxa fixa de 16%. Taxa do item R$ 5,00. Sem frete. Peso volum.(kg)=(Comp.[cm] × Larg.[cm] × Alt.[cm]) ÷ 6000'
-      },
-      'shopee': {
+          name: 'SHEIN',
+          invoiceRate: 8,
+          platformFeeRate: 16,
+          shippingFee: 0,
+          itemFee: 5,
+          info: 'SHEIN: Taxa fixa de 16%. Taxa do item R$ 5,00. Sem frete. Peso volum.(kg)=(Comp.[cm] × Larg.[cm] × Alt.[cm]) ÷ 6000'
+        },
+        'tiktok': {
+          name: 'TIKTOK',
+          invoiceRate: 8,
+          platformFeeRate: 6,
+          shippingFee: 6,  // 默认运费率为 6%
+          itemFee: 2,      // 默认固定费用为 R$ 2.00（售价 < R$ 79 时）
+          info: 'TIKTOK: Frete 6% do valor do produto, Taxa do item R$ 2,00 para pedidos abaixo de R$ 79.'
+        },
+        'shopee': {
         name: 'SHOPEE',
         invoiceRate: 8,
         platformFeeRate: 20,
@@ -532,7 +549,7 @@
         info: 'Plataforma personalizada: Configure todos os valores manualmente.'
       }
     };
-    
+
     // Função para selecionar plataforma
     function selectPlatform(platform) {
       // Remove active class from all tabs
@@ -557,6 +574,19 @@
       document.getElementById('platformFeeRate').value = formatNumber(config.platformFeeRate);
       document.getElementById('shippingFee').value = formatNumber(config.shippingFee);
       document.getElementById('itemFee').value = formatNumber(config.itemFee);
+      
+      // 修改 TIKTOK 平台的运费标签
+      const shippingFeeLabel = document.querySelector('label[for="shippingFee"]') || 
+                              document.querySelector('label:has(+ #shippingFee)') ||
+                              document.querySelector('label.text-sm.font-medium.text-gray-300.w-40:nth-of-type(4)');
+      
+      if (shippingFeeLabel) {
+        if (platform === 'tiktok') {
+          shippingFeeLabel.textContent = 'Frete (%)';
+        } else {
+          shippingFeeLabel.textContent = 'Frete (R$)';
+        }
+      }
       
       // 同步当前平台的Taxa de Nota Fiscal到所有其他平台（除了个性化平台）
       Object.keys(platformConfigs).forEach(p => {
@@ -704,13 +734,25 @@
       // 计算当前平台的利润（保持原有功能）
   const invoiceFee = sellingPrice * invoiceRate;
   let platformFee = sellingPrice * platformFeeRate;
+  let calculatedShippingFee = shippingFee;
+
+  // TIKTOK 平台特殊处理
+  if (currentPlatform === 'tiktok') {
+    // 运费为售价的 6%
+    calculatedShippingFee = sellingPrice * 0.06;
+    // 如果售价 >= 79，则没有固定费用
+    if (sellingPrice >= 79) {
+      itemFee = 0;
+      document.getElementById('itemFee').value = '0,00';
+    }
+  }
   
   // 应用 SHOPEE 限制
   if (currentPlatform === 'shopee') {
     platformFee = Math.min(platformFee, 100);
   }
   
-  const totalCosts = costPrice + invoiceFee + platformFee + shippingFee + itemFee + materialCost;
+  const totalCosts = costPrice + invoiceFee + platformFee + calculatedShippingFee + itemFee + materialCost;
   const netProfit = sellingPrice - totalCosts;
   const profitRate = sellingPrice > 0 ? (netProfit / sellingPrice) * 100 : 0;
   
