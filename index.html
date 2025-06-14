@@ -807,6 +807,17 @@
           invoiceRate: platformConfigs['shein'].invoiceRate / 100, // 使用配置中的值
           calculateFees: () => ({ shipping: 0, itemFee: 5 })
         },
+        'tiktok': {
+          name: 'TIKTOK',
+          platformFeeRate: 0.06, // 6%
+          invoiceRate: platformConfigs['tiktok'].invoiceRate / 100, // 使用配置中的值
+          calculateFees: (price) => {
+            // TIKTOK: 运费为商品价格的6%，商品费用为R$2.00（价格<R$79时）
+            const shipping = price * 0.06;
+            const itemFee = price < 79 ? 2 : 0;
+            return { shipping, itemFee };
+          }
+        },
         'shopee': {
           name: 'SHOPEE',
           platformFeeRate: 0.20, // 20%
