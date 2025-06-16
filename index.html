@@ -956,8 +956,9 @@
       // 创建表体
       const tbody = document.createElement('tbody');
       
-      // 按利润排序（从高到低）
-      results.sort((a, b) => b.netProfit - a.netProfit);
+      // 自定义平台顺序，TIKTOK排在SHEIN后面
+      const customOrder = ['Mercado Livre', 'SHEIN', 'TIKTOK', 'Magalu', 'SHOPEE', 'Amazon'];
+      results.sort((a, b) => customOrder.indexOf(a.platform) - customOrder.indexOf(b.platform));
       
       results.forEach(result => {
         const row = document.createElement('tr');
