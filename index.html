@@ -224,266 +224,276 @@
   </style>
 </head>
 
-<body class="font-inter bg-gray-50 text-gray-500 min-h-screen flex">
-  <!-- 左侧导航栏 - 平台选择 -->
-  <aside class="w-64 bg-white shadow-sm min-h-screen flex flex-col">
-    <!-- Logo区域 -->
-    <div class="p-6 border-b border-gray-100">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white">
-          <i class="fa fa-calculator text-xl"></i>
-        </div>
-        <div>
-          <h1 class="text-lg font-semibold text-gray-500">Calculadora de Lucro</h1>
-          <p class="text-xs text-gray-300">Sistema de Cálculo de Plataformas</p>
-        </div>
-      </div>
-    </div>
-    
-    <!-- 平台选择菜单 -->
-    <nav class="flex-1 p-4">
-      <ul class="space-y-2">
-        <!-- Mercado Livre -->
-        <li>
-          <a href="#" onclick="selectPlatform('mercado-livre')" id="nav-mercado-livre" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors active">
-            <i class="fa fa-shopping-cart mr-3 text-lg text-blue-500"></i>
-            <span>Mercado Livre</span>
-            <span class="ml-auto bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">ML</span>
-          </a>
-        </li>
-        
-        <!-- SHEIN -->
-        <li>
-          <a href="#" onclick="selectPlatform('shein')" id="nav-shein" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-            <div class="w-6 h-6 bg-black text-white text-sm font-bold rounded mr-3 flex items-center justify-center">S</div>
-            <span>SHEIN</span>
-            <span class="ml-auto bg-purple-100 text-black-600 text-xs px-2 py-1 rounded-full">SH</span>
-          </a>
-        </li>
-        
-        <!-- TIKTOK -->
-          <li>
-            <a href="#" onclick="selectPlatform('tiktok')" id="nav-tiktok" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-              <i class="fa-brands fa-tiktok mr-3 text-lg text-black"></i>
-              <span>TIKTOK</span>
-              <span class="ml-auto bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">TK</span>
-            </a>
-          </li>
-        
-        <!-- SHOPEE -->
-        <li>
-          <a href="#" onclick="selectPlatform('shopee')" id="nav-shopee" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-            <i class="fa fa-shopping-bag mr-3 text-lg text-orange-500"></i>
-            <span>SHOPEE</span>
-            <span class="ml-auto bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">SP</span>
-          </a>
-        </li>
-        
-        <!-- Magalu -->
-        <li>
-          <a href="#" onclick="selectPlatform('magalu')" id="nav-magalu" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-            <span class="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-sm font-bold rounded mr-3">M</span>
-            <span>Magalu</span>
-            <span class="ml-auto bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">MG</span>
-          </a>
-        </li>
-        
-        <!-- Amazon -->
-        <li>
-          <a href="#" onclick="selectPlatform('amazon')" id="nav-amazon" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-            <i class="fa-brands fa-amazon mr-3 text-lg text-yellow-600"></i>
-            <span>Amazon</span>
-            <span class="ml-auto bg-yellow-100 text-yellow-600 text-xs px-2 py-1 rounded-full">AM</span>
-          </a>
-        </li>
-        
-        <!-- Personalizado -->
-        <li>
-          <a href="#" onclick="selectPlatform('personalizado')" id="nav-personalizado" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-            <i class="fa fa-cog mr-3 text-lg text-gray-500"></i>
-            <span>Personalizado</span>
-            <span class="ml-auto bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">PS</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    
-    <!-- 底部操作区域 -->
-    <div class="p-4 border-t border-gray-100">
-      <!-- 删除这个按钮，因为要移动到主要按钮区域 -->
-    </div>
-  </aside>
-
-  <!-- 右侧主要内容区域 -->
-  <div class="flex-1 flex flex-col">
-    <!-- Barra de navegação superior -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-      <div class="px-6">
-        <div class="flex items-center justify-between h-16">
-          <!-- 页面标题 -->
+<body class="font-inter bg-gray-50 text-gray-500 min-h-screen flex flex-col">
+  <div class="flex flex-1 min-h-0">
+    <!-- 左侧导航栏 - 平台选择 -->
+    <aside class="w-64 bg-white shadow-sm min-h-screen flex flex-col">
+      <!-- Logo区域 -->
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white">
+            <i class="fa fa-calculator text-xl"></i>
+          </div>
           <div>
-            <h1 class="text-xl font-semibold text-gray-500" id="platformTitle">Mercado Livre - Calculadora de Lucro</h1>
-            <p class="text-sm text-gray-300" id="platformDescription">Configure os parâmetros e calcule o lucro</p>
-          </div>
-          
-          <!-- 操作按钮区域 -->
-          <div class="flex space-x-3">
-            <button onclick="clearAllInputs()" class="px-4 py-2 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200 transition-colors">
-              <i class="fa fa-refresh mr-2"></i>Limpar Tudo
-            </button>
-            <button onclick="exportHistory()" class="px-4 py-2 bg-info text-white rounded-lg hover:bg-info/90 transition-colors btn-info">
-              <i class="fa fa-download mr-2"></i>Exportar
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- Área de conteúdo principal -->
-    <main class="flex-1 px-6 py-6 flex gap-6">
-      <!-- Área de entrada de dados -->
-      <div class="flex-1">
-        
-        <!-- Formulário de entrada -->
-        <div class="bg-white rounded-xl shadow-sm p-4 mb-6">  <!-- 减小p-6为p-4 -->
-          <h2 class="text-lg font-semibold text-gray-500 mb-3">Dados do Produto</h2>  <!-- 减小mb-4为mb-3 -->
-          
-          <div class="flex flex-col gap-3">  <!-- 改为单列flex布局 -->
-            <!-- Modelo do Produto 单独一行 -->
-            <div class="flex items-center">
-              <label class="text-sm font-medium text-gray-300 w-40">Modelo do Produto</label>
-              <input type="text" id="productModel" class="input-field py-1 ml-2" placeholder="Digite o modelo do produto" style="width: 200px;">
-            </div>
-            
-            <!-- 每行两个输入框 -->
-            <div class="flex">
-              <div class="flex items-center w-1/2">
-                <label class="text-sm font-medium text-gray-300 w-40">Preço de Custo (R$)</label>
-                <input type="text" id="costPrice" class="input-field py-1 ml-2" value="0,00" oninput="formatCurrency(this)" style="width: 120px;">
-              </div>
-              <div class="flex items-center w-1/2">
-                <label class="text-sm font-medium text-gray-300 w-40">Taxa de Nota Fiscal (%)</label>
-                <input type="text" id="invoiceRate" class="input-field py-1 ml-2" value="8,00" oninput="formatPercentage(this)" style="width: 120px;">
-              </div>
-            </div>
-            
-            <div class="flex">
-              <div class="flex items-center w-1/2">
-                <label class="text-sm font-medium text-gray-300 w-40">Preço de Venda (R$)</label>
-                <input type="text" id="sellingPrice" class="input-field selling-price py-1 ml-2" value="0,00" oninput="formatCurrency(this)" style="width: 120px;">
-              </div>
-              <div class="flex items-center w-1/2">
-                <label class="text-sm font-medium text-gray-300 w-40">Frete (R$)</label>
-                <input type="text" id="shippingFee" class="input-field py-1 ml-2" value="20,00" oninput="formatCurrency(this)" style="width: 120px;">
-              </div>
-            </div>
-            
-            <div class="flex">
-              <div class="flex flex-col w-1/2">
-                <div class="flex items-center">
-                  <label class="text-sm font-medium text-gray-300 w-40">Taxa da Plataforma (%)</label>
-                  <input type="text" id="platformFeeRate" class="input-field py-1 ml-2" value="11,50" oninput="formatPercentage(this)" style="width: 120px;">
-                </div>
-                <div id="mlRateOptions" class="flex gap-3 text-sm ml-40">
-                  <label class="flex items-center">
-                    <input type="radio" name="mlRate" value="11.5" checked class="mr-1"> Normal (11,5%)
-                  </label>
-                  <label class="flex items-center">
-                    <input type="radio" name="mlRate" value="16.5" class="mr-1"> Premium (16,5%)
-                  </label>
-                </div>
-              </div>
-              <div class="flex items-center w-1/2">
-                <label class="text-sm font-medium text-gray-300 w-40">Taxa do Item (R$)</label>
-                <input type="text" id="itemFee" class="input-field py-1 ml-2" value="0,00" oninput="formatCurrency(this)" style="width: 120px;">
-              </div>
-            </div>
-            
-            <div class="flex">
-              <div class="flex items-center w-1/2">
-                <label class="text-sm font-medium text-gray-300 w-40">Taxa de Lucro Alvo (%)</label>
-                <input type="text" id="targetProfitRate" class="input-field py-1 ml-2" value="0,00" oninput="formatPercentage(this)" style="width: 120px;">
-              </div>
-              <div class="flex items-center w-1/2">
-                <label class="text-sm font-medium text-gray-300 w-40">Custo de Embalagem (R$)</label>
-                <input type="text" id="materialCost" class="input-field py-1 ml-2" value="0,00" oninput="formatCurrency(this)" style="width: 120px;">
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Botões de ação -->
-        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-          <div class="flex flex-wrap gap-3">
-            <button onclick="calculateProfit()" class="px-6 py-2 text-white rounded-lg transition-colors btn-primary">
-              <i class="fa fa-calculator mr-2"></i>Calcular Lucro
-            </button>
-            <button onclick="suggestPrice()" class="px-6 py-2 text-white rounded-lg transition-colors btn-success">
-              <i class="fa fa-lightbulb-o mr-2"></i>Sugerir Preço
-            </button>
-            <!-- 删除了Limpar按钮 -->
-            <button onclick="compareAllPlatforms()" class="px-6 py-2 text-white rounded-lg transition-colors btn-warning">
-              <i class="fa fa-balance-scale mr-2"></i>Comparar
-            </button>
-            <button onclick="copyPrices()" class="px-6 py-2 text-white rounded-lg transition-colors btn-info">
-              <i class="fa fa-copy mr-2"></i>Copiar Preços
-            </button>
-          </div>
-          
-          <!-- 结果区域 (移动到这里) -->
-          <div class="mt-6">
-            <h2 class="text-lg font-semibold text-gray-500 mb-2">Resultados</h2>
-            
-            <div class="results-container">
-              <div class="result-card bg-gray-50 rounded-lg">
-                <div class="result-label">Lucro Líquido</div>
-                <div class="result-value" id="netProfitValue">R$ 0,00</div>
-              </div>
-              
-              <div class="result-card bg-gray-50 rounded-lg">
-                <div class="result-label">Taxa de Lucro</div>
-                <div class="result-value" id="profitRateValue">0,00%</div>
-              </div>
-              
-              <div class="result-card bg-blue-50 rounded-lg">
-                <div class="result-label">Preço Sugerido</div>
-                <div class="result-value suggested-price" id="suggestedPriceValue">R$ 0,00</div>
-              </div>
-              
-              <div class="result-card bg-gray-50 rounded-lg">
-                <div class="result-label">Lucro Esperado</div>
-                <div class="result-value" id="expectedProfitValue">R$ 0,00</div>
-              </div>
-            </div>
+            <h1 class="text-lg font-semibold text-gray-500">Calculadora de Lucro</h1>
+            <p class="text-xs text-gray-300">Sistema de Cálculo de Plataformas</p>
           </div>
         </div>
       </div>
       
-      <!-- Área lateral direita - Histórico e informações -->
-      <div class="w-[22rem]">
-        <!-- Informações da plataforma -->
-        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-          <h3 class="text-lg font-semibold text-gray-500 mb-4">Informações da Plataforma</h3>
-          <div id="platformInfo" class="text-sm text-gray-400">
-            <!-- Informações específicas da plataforma serão inseridas aqui -->
+      <!-- 平台选择菜单 -->
+      <nav class="flex-1 p-4">
+        <ul class="space-y-2">
+          <!-- Mercado Livre -->
+          <li>
+            <a href="#" onclick="selectPlatform('mercado-livre')" id="nav-mercado-livre" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors active">
+              <i class="fa fa-shopping-cart mr-3 text-lg text-blue-500"></i>
+              <span>Mercado Livre</span>
+              <span class="ml-auto bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">ML</span>
+            </a>
+          </li>
+          
+          <!-- SHEIN -->
+          <li>
+            <a href="#" onclick="selectPlatform('shein')" id="nav-shein" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+              <div class="w-6 h-6 bg-black text-white text-sm font-bold rounded mr-3 flex items-center justify-center">S</div>
+              <span>SHEIN</span>
+              <span class="ml-auto bg-purple-100 text-black-600 text-xs px-2 py-1 rounded-full">SH</span>
+            </a>
+          </li>
+          
+          <!-- TIKTOK -->
+            <li>
+              <a href="#" onclick="selectPlatform('tiktok')" id="nav-tiktok" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+                <i class="fa-brands fa-tiktok mr-3 text-lg text-black"></i>
+                <span>TIKTOK</span>
+                <span class="ml-auto bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">TK</span>
+              </a>
+            </li>
+          
+          <!-- SHOPEE -->
+          <li>
+            <a href="#" onclick="selectPlatform('shopee')" id="nav-shopee" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+              <i class="fa fa-shopping-bag mr-3 text-lg text-orange-500"></i>
+              <span>SHOPEE</span>
+              <span class="ml-auto bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">SP</span>
+            </a>
+          </li>
+          
+          <!-- Magalu -->
+          <li>
+            <a href="#" onclick="selectPlatform('magalu')" id="nav-magalu" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+              <span class="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-sm font-bold rounded mr-3">M</span>
+              <span>Magalu</span>
+              <span class="ml-auto bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">MG</span>
+            </a>
+          </li>
+          
+          <!-- Amazon -->
+          <li>
+            <a href="#" onclick="selectPlatform('amazon')" id="nav-amazon" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+              <i class="fa-brands fa-amazon mr-3 text-lg text-yellow-600"></i>
+              <span>Amazon</span>
+              <span class="ml-auto bg-yellow-100 text-yellow-600 text-xs px-2 py-1 rounded-full">AM</span>
+            </a>
+          </li>
+          
+          <!-- Personalizado -->
+          <li>
+            <a href="#" onclick="selectPlatform('personalizado')" id="nav-personalizado" class="platform-tab nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+              <i class="fa fa-cog mr-3 text-lg text-gray-500"></i>
+              <span>Personalizado</span>
+              <span class="ml-auto bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">PS</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      <!-- 底部操作区域 -->
+      <div class="p-4 border-t border-gray-100">
+        <!-- 删除这个按钮，因为要移动到主要按钮区域 -->
+      </div>
+    </aside>
+
+    <!-- 右侧主要内容区域 -->
+    <div class="flex-1 flex flex-col">
+      <!-- Barra de navegação superior -->
+      <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="px-6">
+          <div class="flex items-center justify-between h-16">
+            <!-- 页面标题 -->
+            <div>
+              <h1 class="text-xl font-semibold text-gray-500" id="platformTitle">Mercado Livre - Calculadora de Lucro</h1>
+              <p class="text-sm text-gray-300" id="platformDescription">Configure os parâmetros e calcule o lucro</p>
+            </div>
+            
+            <!-- 操作按钮区域 -->
+            <div class="flex space-x-3">
+              <button onclick="clearAllInputs()" class="px-4 py-2 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200 transition-colors">
+                <i class="fa fa-refresh mr-2"></i>Limpar Tudo
+              </button>
+              <button onclick="exportHistory()" class="px-4 py-2 bg-info text-white rounded-lg hover:bg-info/90 transition-colors btn-info">
+                <i class="fa fa-download mr-2"></i>Exportar
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Área de conteúdo principal -->
+      <main class="flex-1 px-6 py-6 flex gap-6">
+        <!-- Área de entrada de dados -->
+        <div class="flex-1">
+          
+          <!-- Formulário de entrada -->
+          <div class="bg-white rounded-xl shadow-sm p-4 mb-6">  <!-- 减小p-6为p-4 -->
+            <h2 class="text-lg font-semibold text-gray-500 mb-3">Dados do Produto</h2>  <!-- 减小mb-4为mb-3 -->
+            
+            <div class="flex flex-col gap-3">  <!-- 改为单列flex布局 -->
+              <!-- Modelo do Produto 单独一行 -->
+              <div class="flex items-center">
+                <label class="text-sm font-medium text-gray-300 w-40">Modelo do Produto</label>
+                <input type="text" id="productModel" class="input-field py-1 ml-2" placeholder="Digite o modelo do produto" style="width: 200px;">
+              </div>
+              
+              <!-- 每行两个输入框 -->
+              <div class="flex">
+                <div class="flex items-center w-1/2">
+                  <label class="text-sm font-medium text-gray-300 w-40">Preço de Custo (R$)</label>
+                  <input type="text" id="costPrice" class="input-field py-1 ml-2" value="0,00" oninput="formatCurrency(this)" style="width: 120px;">
+                </div>
+                <div class="flex items-center w-1/2">
+                  <label class="text-sm font-medium text-gray-300 w-40">Taxa de Nota Fiscal (%)</label>
+                  <input type="text" id="invoiceRate" class="input-field py-1 ml-2" value="8,00" oninput="formatPercentage(this)" style="width: 120px;">
+                </div>
+              </div>
+              
+              <div class="flex">
+                <div class="flex items-center w-1/2">
+                  <label class="text-sm font-medium text-gray-300 w-40">Preço de Venda (R$)</label>
+                  <input type="text" id="sellingPrice" class="input-field selling-price py-1 ml-2" value="0,00" oninput="formatCurrency(this)" style="width: 120px;">
+                </div>
+                <div class="flex items-center w-1/2">
+                  <label class="text-sm font-medium text-gray-300 w-40">Frete (R$)</label>
+                  <input type="text" id="shippingFee" class="input-field py-1 ml-2" value="20,00" oninput="formatCurrency(this)" style="width: 120px;">
+                </div>
+              </div>
+              
+              <div class="flex">
+                <div class="flex flex-col w-1/2">
+                  <div class="flex items-center">
+                    <label class="text-sm font-medium text-gray-300 w-40">Taxa da Plataforma (%)</label>
+                    <input type="text" id="platformFeeRate" class="input-field py-1 ml-2" value="11,50" oninput="formatPercentage(this)" style="width: 120px;">
+                  </div>
+                  <div id="mlRateOptions" class="flex gap-3 text-sm ml-40">
+                    <label class="flex items-center">
+                      <input type="radio" name="mlRate" value="11.5" checked class="mr-1"> Normal (11,5%)
+                    </label>
+                    <label class="flex items-center">
+                      <input type="radio" name="mlRate" value="16.5" class="mr-1"> Premium (16,5%)
+                    </label>
+                  </div>
+                </div>
+                <div class="flex items-center w-1/2">
+                  <label class="text-sm font-medium text-gray-300 w-40">Taxa do Item (R$)</label>
+                  <input type="text" id="itemFee" class="input-field py-1 ml-2" value="0,00" oninput="formatCurrency(this)" style="width: 120px;">
+                </div>
+              </div>
+              
+              <div class="flex">
+                <div class="flex items-center w-1/2">
+                  <label class="text-sm font-medium text-gray-300 w-40">Taxa de Lucro Alvo (%)</label>
+                  <input type="text" id="targetProfitRate" class="input-field py-1 ml-2" value="0,00" oninput="formatPercentage(this)" style="width: 120px;">
+                </div>
+                <div class="flex items-center w-1/2">
+                  <label class="text-sm font-medium text-gray-300 w-40">Custo de Embalagem (R$)</label>
+                  <input type="text" id="materialCost" class="input-field py-1 ml-2" value="0,00" oninput="formatCurrency(this)" style="width: 120px;">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Botões de ação -->
+          <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <div class="flex flex-wrap gap-3">
+              <button onclick="calculateProfit()" class="px-6 py-2 text-white rounded-lg transition-colors btn-primary">
+                <i class="fa fa-calculator mr-2"></i>Calcular Lucro
+              </button>
+              <button onclick="suggestPrice()" class="px-6 py-2 text-white rounded-lg transition-colors btn-success">
+                <i class="fa fa-lightbulb-o mr-2"></i>Sugerir Preço
+              </button>
+              <!-- 删除了Limpar按钮 -->
+              <button onclick="compareAllPlatforms()" class="px-6 py-2 text-white rounded-lg transition-colors btn-warning">
+                <i class="fa fa-balance-scale mr-2"></i>Comparar
+              </button>
+              <button onclick="copyPrices()" class="px-6 py-2 text-white rounded-lg transition-colors btn-info">
+                <i class="fa fa-copy mr-2"></i>Copiar Preços
+              </button>
+            </div>
+            
+            <!-- 结果区域 (移动到这里) -->
+            <div class="mt-6">
+              <h2 class="text-lg font-semibold text-gray-500 mb-2">Resultados</h2>
+              
+              <div class="results-container">
+                <div class="result-card bg-gray-50 rounded-lg">
+                  <div class="result-label">Lucro Líquido</div>
+                  <div class="result-value" id="netProfitValue">R$ 0,00</div>
+                </div>
+                
+                <div class="result-card bg-gray-50 rounded-lg">
+                  <div class="result-label">Taxa de Lucro</div>
+                  <div class="result-value" id="profitRateValue">0,00%</div>
+                </div>
+                
+                <div class="result-card bg-blue-50 rounded-lg">
+                  <div class="result-label">Preço Sugerido</div>
+                  <div class="result-value suggested-price" id="suggestedPriceValue">R$ 0,00</div>
+                </div>
+                
+                <div class="result-card bg-gray-50 rounded-lg">
+                  <div class="result-label">Lucro Esperado</div>
+                  <div class="result-value" id="expectedProfitValue">R$ 0,00</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         
-        <!-- Histórico de cálculos -->
-        <div class="bg-white rounded-xl shadow-sm p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold text-gray-500">Histórico de Cálculos</h3>
-            <button onclick="clearHistory()" class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors">
-              <i class="fa fa-trash mr-1"></i>Limpar
-            </button>
+        <!-- Área lateral direita - Histórico e informações -->
+        <div class="w-[22rem]">
+          <!-- Informações da plataforma -->
+          <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-500 mb-4">Informações da Plataforma</h3>
+            <div id="platformInfo" class="text-sm text-gray-400">
+              <!-- Informações específicas da plataforma serão inseridas aqui -->
+            </div>
           </div>
-          <div id="historyArea" class="history-area">
-            <p class="text-gray-400 text-center">Nenhum cálculo realizado ainda.</p>
+          
+          <!-- Histórico de cálculos -->
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-semibold text-gray-500">Histórico de Cálculos</h3>
+              <button onclick="clearHistory()" class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors">
+                <i class="fa fa-trash mr-1"></i>Limpar
+              </button>
+            </div>
+            <div id="historyArea" class="history-area">
+              <p class="text-gray-400 text-center">Nenhum cálculo realizado ainda.</p>
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
+  <!-- 页脚 -->
+  <footer class="bg-white shadow-sm py-4 border-t border-gray-100">
+    <div class="container mx-auto px-6">
+      <div class="text-center text-gray-500 text-sm">
+        <p>YOUBAI PRESENTES - Copyright © 2025. Todos os direitos reservados</p>
+      </div>
+    </div>
+  </footer>
 
   <script>
     // Variáveis globais
