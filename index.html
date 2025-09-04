@@ -350,10 +350,16 @@
             <h2 class="text-lg font-semibold text-gray-500 mb-3">Dados do Produto</h2>  <!-- 减小mb-4为mb-3 -->
             
             <div class="flex flex-col gap-3">  <!-- 改为单列flex布局 -->
-              <!-- Modelo do Produto 单独一行 -->
+              <!-- Modelo do Produto 和 Valor de liquidação 在同一行 -->
               <div class="flex items-center">
-                <label class="text-sm font-medium text-gray-300 w-40">Modelo do Produto</label>
-                <input type="text" id="productModel" class="input-field py-1 ml-2" placeholder="Digite o modelo do produto" style="width: 200px;">
+                <div class="flex items-center w-1/2">
+                  <label class="text-sm font-medium text-gray-300 w-40">Modelo do Produto</label>
+                  <input type="text" id="productModel" class="input-field py-1 ml-2" placeholder="Digite o modelo do produto" style="width: 200px;">
+                </div>
+                <div class="flex items-center w-1/2">
+                  <label class="text-sm font-medium text-gray-300 w-40">Valor de Liquidação</label>
+                  <span id="liquidationValueDisplay" class="text-lg font-semibold text-success ml-2" style="width: 120px;">R$ 0,00</span>
+                </div>
               </div>
               
               <!-- 每行两个输入框 -->
@@ -444,6 +450,11 @@
                 <div class="result-card bg-gray-50 rounded-lg">
                   <div class="result-label">Taxa de Lucro</div>
                   <div class="result-value" id="profitRateValue">0,00%</div>
+                </div>
+                
+                <div class="result-card bg-green-50 rounded-lg">
+                  <div class="result-label">Valor de Liquidação</div>
+                  <div class="result-value" id="liquidationValue">R$ 0,00</div>
                 </div>
                 
                 <div class="result-card bg-blue-50 rounded-lg">
@@ -582,7 +593,14 @@
       // Update form values
       document.getElementById('invoiceRate').value = formatNumber(config.invoiceRate);
       document.getElementById('platformFeeRate').value = formatNumber(config.platformFeeRate);
-      document.getElementById('shippingFee').value = formatNumber(config.shippingFee);
+      
+      // TIKTOK 平台运费显示特殊处理：只显示 6，不显示格式化结果
+      if (platform === 'tiktok') {
+        document.getElementById('shippingFee').value = '6';
+      } else {
+        document.getElementById('shippingFee').value = formatNumber(config.shippingFee);
+      }
+      
       document.getElementById('itemFee').value = formatNumber(config.itemFee);
       
       // 修改 TIKTOK 平台的运费标签
@@ -747,15 +765,35 @@
   let calculatedShippingFee = shippingFee;
 
   // TIKTOK 平台特殊处理
-  if (currentPlatform === 'tiktok') {
-    // 运费为售价的 6%
-    calculatedShippingFee = sellingPrice * 0.06;
-    // 如果售价 >= 79，则没有固定费用
-    if (sellingPrice >= 79) {
-      itemFee = 0;
-      document.getElementById('itemFee').value = '0,00';
-    }
-  }
+      if (currentPlatform === 'tiktok') {
+        // 运费为售价的 6%
+        calculatedShippingFee = sellingPrice * 0.06;
+        // 不更新运费显示值，保持显示 6
+        
+        // 如果售价 < 79，则有固定费用 R$ 2.00
+        if (sellingPrice < 79) {
+          itemFee = 2.00;
+          document.getElementById('itemFee').value = '2,00';
+        } else {
+          itemFee = 0;
+          document.getElementById('itemFee').value = '0,00';
+        }
+      }
+      
+      // Amazon 平台特殊处理
+      if (currentPlatform === 'amazon') {
+        // 根据售价动态计算运费
+        if (sellingPrice < 30) {
+          calculatedShippingFee = 4.50;
+        } else if (sellingPrice < 79) {
+          calculatedShippingFee = 8.00;
+        } else {
+          calculatedShippingFee = 21.45;
+        }
+        
+        // 更新运费显示
+        document.getElementById('shippingFee').value = formatNumber(calculatedShippingFee);
+      }
   
   // 应用 SHOPEE 限制
   if (currentPlatform === 'shopee') {
@@ -766,9 +804,14 @@
   const netProfit = sellingPrice - totalCosts;
   const profitRate = sellingPrice > 0 ? (netProfit / sellingPrice) * 100 : 0;
   
+  // 计算 Valor de liquidação (售价减去所有费用但不减去成本价和税务发票费率)
+  const liquidationValue = sellingPrice - (platformFee + calculatedShippingFee + itemFee + materialCost);
+  
   // 更新当前平台结果
   document.getElementById('netProfitValue').textContent = `R$ ${formatNumber(netProfit)}`;
   document.getElementById('profitRateValue').textContent = `${formatNumber(profitRate)}%`;
+  document.getElementById('liquidationValue').textContent = `R$ ${formatNumber(liquidationValue)}`;
+  document.getElementById('liquidationValueDisplay').textContent = `R$ ${formatNumber(liquidationValue)}`;
   
   // 添加到历史记录
   addToHistory({
@@ -824,7 +867,7 @@
           calculateFees: (price) => {
             // TIKTOK: 运费为商品价格的6%，商品费用为R$2.00（价格<R$79时）
             const shipping = price * 0.06;
-            const itemFee = price < 79 ? 2 : 0;
+            const itemFee = price < 79 ? 2.00 : 0;
             return { shipping, itemFee };
           }
         },
@@ -847,7 +890,18 @@
           name: 'Amazon',
           platformFeeRate: 0.12, // 12%
           invoiceRate: platformConfigs['amazon'].invoiceRate / 100, // 使用配置中的值
-          calculateFees: () => ({ shipping: 21.45, itemFee: 2 })
+          calculateFees: (price) => {
+            // Amazon: 根据售价设置不同的运费
+            let shipping;
+            if (price < 30) {
+              shipping = 4.50;
+            } else if (price < 79) {
+              shipping = 8.00;
+            } else {
+              shipping = 21.45;
+            }
+            return { shipping, itemFee: 2 };
+          }
         }
       };
       
@@ -868,10 +922,14 @@
         const netProfit = sellingPrice - totalCosts;
         const profitRate = sellingPrice > 0 ? (netProfit / sellingPrice) * 100 : 0;
         
+        // 计算 Valor de liquidação (售价减去所有费用但不减去成本价和税务发票费率)
+        const liquidationValue = sellingPrice - (platformFee + fees.shipping + fees.itemFee + materialCost);
+        
         results.push({
           platform: config.name,
           netProfit,
           profitRate,
+          liquidationValue,
           isCurrentPlatform: key === currentPlatform
         });
       });
@@ -932,7 +990,7 @@
       // 创建表头
       const thead = document.createElement('thead');
       const headerRow = document.createElement('tr');
-      const headers = ['Plataforma', 'Lucro Líquido', 'Taxa de Lucro'];
+      const headers = ['Plataforma', 'Lucro Líquido', 'Taxa de Lucro', 'Valor de Liquidação'];
       
       headers.forEach(headerText => {
         const th = document.createElement('th');
@@ -971,7 +1029,8 @@
         const cells = [
           result.platform + (result.isCurrentPlatform ? ' (Atual)' : ''),
           `R$ ${formatNumber(result.netProfit)}`,
-          `${formatNumber(result.profitRate)}%`
+          `${formatNumber(result.profitRate)}%`,
+          `R$ ${formatNumber(result.liquidationValue)}`
         ];
         
         cells.forEach((cellText, index) => {
@@ -989,6 +1048,12 @@
           // 为利润值添加颜色
           if (index === 1) {
             td.style.color = result.netProfit >= 0 ? '#67C23A' : '#F56C6C';
+            td.style.fontWeight = 'bold';
+          }
+          
+          // 为清算价值添加颜色
+          if (index === 3) {
+            td.style.color = result.liquidationValue >= 0 ? '#67C23A' : '#F56C6C';
             td.style.fontWeight = 'bold';
           }
           
