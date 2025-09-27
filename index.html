@@ -310,6 +310,63 @@
     #mobileSidebar .relative {
       background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     }
+    
+    /* 底部导航栏样式 */
+    .bottom-nav-item {
+      color: #6b7280;
+      transition: all 0.3s ease;
+      min-width: 50px;
+      border-radius: 12px;
+    }
+    
+    .bottom-nav-item.active {
+      color: #000000;
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bottom-nav-item:hover {
+      color: #374151;
+      transform: translateY(-1px);
+      background: rgba(0, 0, 0, 0.05);
+    }
+    
+    .bottom-nav-item.active i {
+      color: #000000;
+    }
+    
+    .bottom-nav-item.active span {
+      color: #000000;
+      font-weight: 600;
+    }
+    
+    .bottom-nav-item:hover:not(.active) {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    
+    /* 移动端主内容区域底部留白 */
+    @media (max-width: 768px) {
+      main {
+        padding-bottom: 80px; /* 为底部导航留空间 */
+      }
+      
+      /* 底部导航栏在移动端的特殊样式 */
+      #mobileBottomNav {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1);
+      }
+      
+      .bottom-nav-item {
+        padding: 8px 4px;
+      }
+      
+      .bottom-nav-item span {
+        font-size: 10px;
+        margin-top: 2px;
+      }
+    }
   </style>
 </head>
 
@@ -564,7 +621,7 @@
             
             <div class="flex flex-col gap-3">  <!-- 改为单列flex布局 -->
               <!-- Modelo do Produto 和 Valor de liquidação 在同一行 -->
-              <div class="flex items-center">
+              <div class="flex items-center hidden md:flex">
                 <div class="flex items-center w-1/2">
                   <label class="text-sm font-medium text-gray-300 w-40">Modelo do Produto</label>
                   <input type="text" id="productModel" class="input-field py-1 ml-2" placeholder="Digite o modelo do produto" style="width: 200px;">
@@ -590,7 +647,7 @@
               <div class="flex">
                 <div class="flex items-center w-1/2">
                   <label class="text-sm font-medium text-gray-300 w-40">Taxa de Nota Fiscal (%)</label>
-                  <input type="text" id="invoiceRate" class="input-field py-1 ml-2" value="8,00" oninput="formatPercentage(this)" style="width: 120px;">
+                  <input type="text" id="invoiceRate" class="input-field py-1 ml-2" value="10,00" oninput="formatPercentage(this)" style="width: 120px;">
                 </div>
                 <div class="flex items-center w-1/2">
                   <label class="text-sm font-medium text-gray-300 w-40">Frete (R$)</label>
@@ -667,7 +724,7 @@
                   <div class="result-value" id="profitRateValue">0,00%</div>
                 </div>
                 
-                <div class="result-card rounded-lg">
+                <div class="result-card rounded-lg hidden md:block">
                   <div class="result-label">Valor de Liquidação</div>
                   <div class="result-value" id="liquidationValue">R$ 0,00</div>
                 </div>
@@ -730,7 +787,7 @@
     let platformConfigs = {
       'mercado-livre': {
         name: 'Mercado Livre',
-        invoiceRate: 8,
+        invoiceRate: 10,
         platformFeeRate: 11.5,
         shippingFee: 20,
         itemFee: 0,
@@ -738,7 +795,7 @@
       },
       'shein': {
           name: 'SHEIN',
-          invoiceRate: 8,
+          invoiceRate: 10,
           platformFeeRate: 16,
           shippingFee: 0,
           itemFee: 5,
@@ -746,7 +803,7 @@
         },
         'tiktok': {
           name: 'TIKTOK',
-          invoiceRate: 8,
+          invoiceRate: 10,
           platformFeeRate: 6,
           shippingFee: 6,  // 默认运费率为 6%
           itemFee: 2,      // 默认固定费用为 R$ 2.00（售价 < R$ 79 时）
@@ -754,7 +811,7 @@
         },
         'shopee': {
         name: 'SHOPEE',
-        invoiceRate: 8,
+        invoiceRate: 10,
         platformFeeRate: 20,
         shippingFee: 0,
         itemFee: 4,
@@ -762,7 +819,7 @@
       },
       'magalu': {
         name: 'Magalu',
-        invoiceRate: 8,
+        invoiceRate: 10,
         platformFeeRate: 18,
         shippingFee: 0,
         itemFee: 5,
@@ -770,7 +827,7 @@
       },
       'amazon': {
         name: 'Amazon',
-        invoiceRate: 8,
+        invoiceRate: 10,
         platformFeeRate: 12,
         shippingFee: 0,
         itemFee: 2,
@@ -778,7 +835,7 @@
       },
       'personalizado': {
         name: 'Personalizado',
-        invoiceRate: 8,
+        invoiceRate: 10,
         platformFeeRate: 0,
         shippingFee: 0,
         itemFee: 0,
@@ -1551,9 +1608,15 @@
         tab.classList.add('text-gray-400');
       });
       
+      // 同步底部导航栏的激活状态
+      document.querySelectorAll('.bottom-nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
       // 激活选中的平台
       const desktopTab = document.getElementById(`nav-${platform}`);
       const mobileTab = document.getElementById(`nav-${platform}-mobile`);
+      const bottomNavItem = document.querySelector(`.bottom-nav-item[data-platform="${platform}"]`);
       
       if (desktopTab) {
         desktopTab.classList.add('active');
@@ -1564,7 +1627,72 @@
         mobileTab.classList.add('active');
         mobileTab.classList.remove('text-gray-400');
       }
+      
+      if (bottomNavItem) {
+        bottomNavItem.classList.add('active');
+      }
     };
   </script>
+
+  <!-- 移动端底部导航栏 -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50" id="mobileBottomNav">
+    <div class="flex items-center justify-around py-2">
+      <!-- Mercado Livre -->
+      <button onclick="selectPlatform('mercado-livre'); closeMobileMenu()" class="bottom-nav-item flex flex-col items-center py-2 px-2 rounded-lg transition-all duration-300 active" data-platform="mercado-livre">
+        <div class="w-6 h-6 mb-1 flex items-center justify-center">
+          <i class="fa fa-shopping-cart text-sm text-blue-500"></i>
+        </div>
+        <span class="text-xs font-medium">ML</span>
+      </button>
+      
+      <!-- SHEIN -->
+      <button onclick="selectPlatform('shein'); closeMobileMenu()" class="bottom-nav-item flex flex-col items-center py-2 px-2 rounded-lg transition-all duration-300" data-platform="shein">
+        <div class="w-6 h-6 mb-1 flex items-center justify-center">
+          <div class="w-4 h-4 bg-black text-white text-xs font-bold rounded flex items-center justify-center">S</div>
+        </div>
+        <span class="text-xs font-medium">SHEIN</span>
+      </button>
+      
+      <!-- TIKTOK -->
+      <button onclick="selectPlatform('tiktok'); closeMobileMenu()" class="bottom-nav-item flex flex-col items-center py-2 px-2 rounded-lg transition-all duration-300" data-platform="tiktok">
+        <div class="w-6 h-6 mb-1 flex items-center justify-center">
+          <i class="fa-brands fa-tiktok text-sm text-black"></i>
+        </div>
+        <span class="text-xs font-medium">TIKTOK</span>
+      </button>
+      
+      <!-- SHOPEE -->
+      <button onclick="selectPlatform('shopee'); closeMobileMenu()" class="bottom-nav-item flex flex-col items-center py-2 px-2 rounded-lg transition-all duration-300" data-platform="shopee">
+        <div class="w-6 h-6 mb-1 flex items-center justify-center">
+          <i class="fa fa-shopping-bag text-sm text-orange-500"></i>
+        </div>
+        <span class="text-xs font-medium">SHOPEE</span>
+      </button>
+      
+      <!-- Magalu -->
+      <button onclick="selectPlatform('magalu'); closeMobileMenu()" class="bottom-nav-item flex flex-col items-center py-2 px-2 rounded-lg transition-all duration-300" data-platform="magalu">
+        <div class="w-6 h-6 mb-1 flex items-center justify-center">
+          <div class="w-4 h-4 bg-blue-600 text-white text-xs font-bold rounded flex items-center justify-center">M</div>
+        </div>
+        <span class="text-xs font-medium">Magalu</span>
+      </button>
+      
+      <!-- Amazon -->
+      <button onclick="selectPlatform('amazon'); closeMobileMenu()" class="bottom-nav-item flex flex-col items-center py-2 px-2 rounded-lg transition-all duration-300" data-platform="amazon">
+        <div class="w-6 h-6 mb-1 flex items-center justify-center">
+          <i class="fa-brands fa-amazon text-sm text-yellow-600"></i>
+        </div>
+        <span class="text-xs font-medium">Amazon</span>
+      </button>
+      
+      <!-- Personalizado -->
+      <button onclick="selectPlatform('personalizado'); closeMobileMenu()" class="bottom-nav-item flex flex-col items-center py-2 px-2 rounded-lg transition-all duration-300" data-platform="personalizado">
+        <div class="w-6 h-6 mb-1 flex items-center justify-center">
+          <i class="fa fa-cog text-sm text-gray-500"></i>
+        </div>
+        <span class="text-xs font-medium">Custom</span>
+      </button>
+    </div>
+  </nav>
 </body>
 </html>
