@@ -812,10 +812,10 @@
         'shopee': {
         name: 'SHOPEE',
         invoiceRate: 10,
-        platformFeeRate: 20,
+        platformFeeRate: 14,
         shippingFee: 0,
         itemFee: 4,
-        info: 'SHOPEE: Taxa de 20% (máximo R$ 100). Taxa do item R$ 4,00. Sem frete.'
+        info: 'SHOPEE: Até R$ 79,99 → Taxa 20% e Taxa do item R$ 4,00; A partir de R$ 80 → Taxa 14% (máximo R$ 100). Taxa do item: R$ 16,00 (R$ 80–99,99); R$ 20,00 (R$ 100–199,99); R$ 26,00 (R$ 200+).'
       },
       'magalu': {
         name: 'Magalu',
@@ -1066,6 +1066,25 @@
         // 更新运费显示
         document.getElementById('shippingFee').value = formatNumber(calculatedShippingFee);
       }
+      
+      // Shopee 平台特殊处理
+      if (currentPlatform === 'shopee') {
+        platformFeeRate = (sellingPrice <= 79.99) ? 0.20 : 0.14;
+        platformFee = sellingPrice * platformFeeRate;
+        calculatedShippingFee = 0;
+        if (sellingPrice < 80) {
+          itemFee = 4.00;
+        } else if (sellingPrice >= 80 && sellingPrice <= 99.99) {
+          itemFee = 16.00;
+        } else if (sellingPrice >= 100 && sellingPrice <= 199.99) {
+          itemFee = 20.00;
+        } else if (sellingPrice >= 200) {
+          itemFee = 26.00;
+        }
+        document.getElementById('platformFeeRate').value = platformFeeRate === 0.20 ? '20,00' : '14,00';
+        document.getElementById('shippingFee').value = '0,00';
+        document.getElementById('itemFee').value = formatNumber(itemFee);
+      }
   
   // 应用 SHOPEE 限制
   if (currentPlatform === 'shopee') {
@@ -1145,9 +1164,16 @@
         },
         'shopee': {
           name: 'SHOPEE',
-          platformFeeRate: 0.20, // 20%
+          platformFeeRate: 0.14, // 14%
           invoiceRate: platformConfigs['shopee'].invoiceRate / 100, // 使用配置中的值
-          calculateFees: () => ({ shipping: 0, itemFee: 4 })
+          calculateFees: (price) => {
+            let itemFee = 0;
+            if (price < 80) itemFee = 4.00;
+            else if (price <= 99.99) itemFee = 16.00;
+            else if (price <= 199.99) itemFee = 20.00;
+            else itemFee = 26.00;
+            return { shipping: 0, itemFee };
+          }
         },
         'magalu': {
           name: 'Magalu',
@@ -1183,7 +1209,11 @@
       Object.entries(allPlatforms).forEach(([key, config]) => {
         const fees = config.calculateFees(sellingPrice);
         const invoiceFee = sellingPrice * config.invoiceRate;
-        let platformFee = sellingPrice * config.platformFeeRate;
+        let platformRate = config.platformFeeRate;
+        if (key === 'shopee') {
+          platformRate = (sellingPrice <= 79.99) ? 0.20 : 0.14;
+        }
+        let platformFee = sellingPrice * platformRate;
         
         // 应用 SHOPEE 限制
         if (key === 'shopee') {
