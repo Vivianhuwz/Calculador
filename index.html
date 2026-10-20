@@ -676,6 +676,15 @@
                 </div>
               </div>
               
+              <!-- Comissões de afiliados (apenas TikTok) -->
+              <div class="flex" id="affiliateCommissionRow" style="display: none;">
+                <div class="flex items-center w-1/2">
+                  <label class="text-sm font-medium text-gray-300 w-40">Comissões de afiliados (%)</label>
+                  <input type="text" id="affiliateCommission" class="input-field py-1 ml-2" value="10,00" oninput="formatPercentage(this)" style="width: 120px;">
+                </div>
+                <div class="flex items-center w-1/2"></div>
+              </div>
+              
               <div class="flex">
                 <div class="flex items-center w-1/2">
                   <label class="text-sm font-medium text-gray-300 w-40">Taxa de Lucro Alvo (%)</label>
@@ -804,10 +813,11 @@
         'tiktok': {
           name: 'TIKTOK',
           invoiceRate: 10,
-          platformFeeRate: 6,
+          platformFeeRate: 10,
           shippingFee: 6,  // 默认运费率为 6%
-          itemFee: 2,      // 默认固定费用为 R$ 2.00（售价 < R$ 79 时）
-          info: 'TIKTOK: Frete 6% do valor do produto, Taxa do item R$ 2,00 para pedidos abaixo de R$ 79.'
+          itemFee: 4,      // 默认固定费用为 R$ 4.00（售价 < R$ 50,00 时）
+          affiliateRate: 10, // Comissões de afiliados 10%
+          info: 'TIKTOK: Preço < R$ 50,00 → Comissão 10% + Taxa do item R$ 4,00; Preço ≥ R$ 50,00 → Comissão 6% + Taxa do item R$ 6,00. Frete 6% do valor do produto. Comissões de afiliados 10%.'
         },
         'shopee': {
         name: 'SHOPEE',
@@ -885,6 +895,17 @@
           shippingFeeLabel.textContent = 'Frete (%)';
         } else {
           shippingFeeLabel.textContent = 'Frete (R$)';
+        }
+      }
+      
+      // Comissões de afiliados: exibir apenas no TIKTOK
+      const affiliateRow = document.getElementById('affiliateCommissionRow');
+      if (affiliateRow) {
+        if (platform === 'tiktok') {
+          affiliateRow.style.display = 'flex';
+          document.getElementById('affiliateCommission').value = formatNumber(config.affiliateRate || 0);
+        } else {
+          affiliateRow.style.display = 'none';
         }
       }
       
@@ -1042,14 +1063,18 @@
         calculatedShippingFee = sellingPrice * 0.06;
         // 不更新运费显示值，保持显示 6
         
-        // 如果售价 < 79，则有固定费用 R$ 2.00
-        if (sellingPrice < 79) {
-          itemFee = 2.00;
-          document.getElementById('itemFee').value = '2,00';
+        // 售价 < R$ 50,00 → 平台费用 10% + Taxa do item R$ 4,00
+        // 售价 ≥ R$ 50,00 → 平台费用 6% + Taxa do item R$ 6,00
+        if (sellingPrice < 50) {
+          platformFeeRate = 0.10;
+          itemFee = 4.00;
         } else {
-          itemFee = 0;
-          document.getElementById('itemFee').value = '0,00';
+          platformFeeRate = 0.06;
+          itemFee = 6.00;
         }
+        platformFee = sellingPrice * platformFeeRate;
+        document.getElementById('platformFeeRate').value = platformFeeRate === 0.10 ? '10,00' : '6,00';
+        document.getElementById('itemFee').value = formatNumber(itemFee);
       }
       
       // Amazon 平台特殊处理
@@ -1091,12 +1116,19 @@
     platformFee = Math.min(platformFee, 100);
   }
   
-  const totalCosts = costPrice + invoiceFee + platformFee + calculatedShippingFee + itemFee + materialCost;
+  // Comissões de afiliados (apenas TIKTOK)
+  let affiliateFee = 0;
+  if (currentPlatform === 'tiktok') {
+    const affiliateRate = parseNumber(document.getElementById('affiliateCommission').value) / 100;
+    affiliateFee = sellingPrice * affiliateRate;
+  }
+  
+  const totalCosts = costPrice + invoiceFee + platformFee + calculatedShippingFee + itemFee + materialCost + affiliateFee;
   const netProfit = sellingPrice - totalCosts;
   const profitRate = sellingPrice > 0 ? (netProfit / sellingPrice) * 100 : 0;
   
   // 计算 Valor de liquidação (售价减去所有费用但不减去成本价和税务发票费率)
-  const liquidationValue = sellingPrice - (platformFee + calculatedShippingFee + itemFee + materialCost);
+  const liquidationValue = sellingPrice - (platformFee + calculatedShippingFee + itemFee + materialCost + affiliateFee);
   
   // 更新当前平台结果
   document.getElementById('netProfitValue').textContent = `R$ ${formatNumber(netProfit)}`;
@@ -1153,12 +1185,13 @@
         },
         'tiktok': {
           name: 'TIKTOK',
-          platformFeeRate: 0.06, // 6%
+          platformFeeRate: 0.06, // padrão 6%
+          affiliateRate: 0.10,   // Comissões de afiliados 10%
           invoiceRate: platformConfigs['tiktok'].invoiceRate / 100, // 使用配置中的值
           calculateFees: (price) => {
-            // TIKTOK: 运费为商品价格的6%，商品费用为R$2.00（价格<R$79时）
+            // TIKTOK: 运费为商品价格的6%，Taxa do item R$ 4,00（< R$ 50）ou R$ 6,00（≥ R$ 50）
             const shipping = price * 0.06;
-            const itemFee = price < 79 ? 2.00 : 0;
+            const itemFee = price < 50 ? 4.00 : 6.00;
             return { shipping, itemFee };
           }
         },
@@ -1213,6 +1246,9 @@
         if (key === 'shopee') {
           platformRate = (sellingPrice <= 79.99) ? 0.20 : 0.14;
         }
+        if (key === 'tiktok') {
+          platformRate = (sellingPrice < 50) ? 0.10 : 0.06;
+        }
         let platformFee = sellingPrice * platformRate;
         
         // 应用 SHOPEE 限制
@@ -1220,12 +1256,15 @@
           platformFee = Math.min(platformFee, 100);
         }
         
-        const totalCosts = costPrice + invoiceFee + platformFee + fees.shipping + fees.itemFee + materialCost;
+        // Comissões de afiliados (TIKTOK)
+        const affiliateFee = config.affiliateRate ? sellingPrice * config.affiliateRate : 0;
+        
+        const totalCosts = costPrice + invoiceFee + platformFee + fees.shipping + fees.itemFee + materialCost + affiliateFee;
         const netProfit = sellingPrice - totalCosts;
         const profitRate = sellingPrice > 0 ? (netProfit / sellingPrice) * 100 : 0;
         
         // 计算 Valor de liquidação (售价减去所有费用但不减去成本价和税务发票费率)
-        const liquidationValue = sellingPrice - (platformFee + fees.shipping + fees.itemFee + materialCost);
+        const liquidationValue = sellingPrice - (platformFee + fees.shipping + fees.itemFee + materialCost + affiliateFee);
         
         results.push({
           platform: config.name,
@@ -1419,9 +1458,15 @@
         return;
       }
       
+      // Comissões de afiliados (apenas TIKTOK)
+      let affiliateRate = 0;
+      if (currentPlatform === 'tiktok') {
+        affiliateRate = parseNumber(document.getElementById('affiliateCommission').value) / 100;
+      }
+      
       // Cálculo do preço sugerido
       const fixedCosts = costPrice + shippingFee + itemFee + materialCost;
-      const suggestedPrice = fixedCosts / (1 - targetProfitRate - invoiceRate - platformFeeRate);
+      const suggestedPrice = fixedCosts / (1 - targetProfitRate - invoiceRate - platformFeeRate - affiliateRate);
       
       document.getElementById('suggestedPriceValue').textContent = `R$ ${formatNumber(suggestedPrice)}`;
       // document.getElementById('sellingPrice').value = formatNumber(suggestedPrice); // 注释掉这行，不再自动填充售价
